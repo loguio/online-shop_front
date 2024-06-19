@@ -1,21 +1,44 @@
 import { Button } from "@mui/material";
+import { useState } from "react";
 import styled from "styled-components";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-export const Login = () => {
-  console.log("la ?");
+export const Login = (props: { signin: boolean }) => {
+  const [userName, setUserName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const submit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    console.log(userName, password);
+
+    e.preventDefault();
+    await login({ userName, password });
+    navigate("/profil");
+  };
   return (
     <Body>
       <Container>
         <ContainerLogin>
-          <Title>Account Login</Title>
-          <InputText type="text" placeholder="login"></InputText>
-          <InputText type="text" placeholder="password"></InputText>
+          <Title>Account </Title>
+          <InputText
+            type="text"
+            placeholder="login"
+            onChange={(val) => setUserName(val.target.value)}
+          ></InputText>
+          <InputText
+            type="password"
+            placeholder="password"
+            onChange={(val) => setPassword(val.target.value)}
+          ></InputText>
           <Button
             type="submit"
+            onClick={(e) => submit(e)}
             variant="contained"
             style={{ marginTop: "6vh" }}
           >
-            Login
+            {props.signin ? "Signin" : "Login"}
           </Button>
         </ContainerLogin>
       </Container>
@@ -33,9 +56,7 @@ const Body = styled.div`
 const Title = styled.span`
   font-size: 20px;
   font-weight: 700;
-  /* top: 20px; */
   display: flex;
-  /* position: relative; */
 `;
 const Container = styled.div`
   display: flex;
@@ -43,7 +64,6 @@ const Container = styled.div`
   height: 60vh;
   background-color: #ffffff;
   border-radius: 8px;
-  /* padding: 30px; */
   flex-direction: column;
   gap: 20px;
 `;
@@ -52,7 +72,6 @@ const ContainerLogin = styled.div`
   justify-content: center;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
 `;
 
 const InputText = styled.input`

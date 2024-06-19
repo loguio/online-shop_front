@@ -2,28 +2,39 @@
 import { useNavigate } from "react-router";
 import styled, { css } from "styled-components";
 import React from "react";
+import { LoginState, useAuth } from "../../contexts/AuthContext";
 interface ReactNodeProps {
   children: React.ReactNode;
 }
 const HeadBar = (props: ReactNodeProps) => {
   const navigate = useNavigate();
+  const { userInfo } = useAuth();
   return (
     <>
       <Background>
         <Button onClick={() => navigate("/")} buttonType="primary">
-          Accueil
+          Home
         </Button>
         Online SHOP
         <RightContainer>
-          <Button buttonType="primary" onClick={() => navigate("/login")}>
-            Se connecter
-          </Button>
-          <Button buttonType="primary" onClick={() => navigate("/login")}>
-            S'inscrire
-          </Button>
-          <Button buttonType="primary" onClick={() => navigate("/profil")}>
-            Profil
-          </Button>
+          {userInfo?.state == LoginState.LOGGED_OUT && (
+            <>
+              <Button buttonType="primary" onClick={() => navigate("/login")}>
+                Se connecter
+              </Button>
+              <Button buttonType="primary" onClick={() => navigate("/signin")}>
+                S'inscrire
+              </Button>
+            </>
+          )}
+          {userInfo?.state == LoginState.LOGGED_IN && (
+            <>
+              <Button buttonType="primary" onClick={() => navigate("/profil")}>
+                Profil
+              </Button>
+              <img src=""></img>
+            </>
+          )}
         </RightContainer>
       </Background>
       <div style={{ minHeight: "100%" }}>{props.children}</div>
@@ -116,6 +127,7 @@ const buttonStyles = css<StyleProps>`
   &:hover {
     opacity: ${(props) => (props.disabled ? 0.4 : 0.65)};
   }
+  font-family: Arial;
 `;
 
 const Button = styled.button<StyleProps>`
