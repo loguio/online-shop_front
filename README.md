@@ -2,7 +2,7 @@
 
 ## About the project
 
-[!CAUTION]
+[!WARNING]
 I'm currently working on it.
 
 This project is a fake shop online made to show what I can do. I'm currently working on it.
