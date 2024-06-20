@@ -18,10 +18,25 @@ This project work with online-shop_back.
 
 - open terminal and copy paste command below where you want the repo be install :
 
-  `git clone https://github.com/loguio/online-shop_front.git`
+```bash
+$ git clone https://github.com/loguio/online-shop_front.git
+```
 
-- execute the command : `yarn install`
-- Start the front end with the command : `yarn dev`
+- execute the command :
+
+```bash
+$ yarn install
+```
+
+- Start the front end with the command :
+
+```bash
+$ yarn dev
+```
+
 - install back end if not already done
 
 ## By BOURSE Marius
+
+- [Github](http://github.com/loguio)
+- [Linkedin](http://linkedin.com/in/marius-bourse-52618a220/)
