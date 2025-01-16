@@ -1,21 +1,38 @@
 import { Button } from "@mui/material";
 import { useState } from "react";
 import styled from "styled-components";
-import { useAuth } from "../../contexts/AuthContext";
+import { AuthStatus, useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { ErrorMessage } from "../../components/errorMessage";
+import { authStatusToString } from "../../utils/utils";
 
-export const Login = (props: { signin: boolean }) => {
+export const Login = ({ signin }: { signin: boolean }) => {
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { login } = useAuth();
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const { login, register } = useAuth();
   const navigate = useNavigate();
 
   const submit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     console.log(userName, password);
 
     e.preventDefault();
-    await login({ userName, password });
-    navigate("/profil");
+    if (!signin) {
+      const status = await login({ userName, password });
+      console.log(authStatusToString(status));
+      if (status != AuthStatus.OK) {
+        setErrorMessage(authStatusToString(status));
+        return;
+      }
+      navigate("/profil");
+    } else {
+      const status = await register({ userName, password });
+      if (status != AuthStatus.OK) {
+        setErrorMessage(authStatusToString(status));
+        return;
+      }
+      navigate("/profil");
+    }
   };
   return (
     <Body>
@@ -38,8 +55,9 @@ export const Login = (props: { signin: boolean }) => {
             variant="contained"
             style={{ marginTop: "6vh" }}
           >
-            {props.signin ? "Signin" : "Login"}
+            {signin ? "Signin" : "Login"}
           </Button>
+          {errorMessage && <ErrorMessage message={errorMessage}></ErrorMessage>}
         </ContainerLogin>
       </Container>
     </Body>

@@ -33,7 +33,7 @@ export enum AuthStatus {
   OK,
   WRONG_CREDENTIALS,
   INVALID_FORMAT,
-  EMAIL_UNAVAILABLE,
+  LOGIN_UNAVAILABLE,
   ERROR,
 }
 
@@ -135,7 +135,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUserInfo({ state: LoginState.LOGGED_OUT });
     }
   };
-  const login = async ({ userName, password }: UserCredential) => {
+  const login = async ({
+    userName,
+    password,
+  }: UserCredential): Promise<AuthStatus> => {
     try {
       const result = await loginRequest(userName, password);
 
@@ -171,13 +174,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const result = await registerRequest(userName, password);
 
       if (!result) {
-        //Unknown error
         return AuthStatus.ERROR;
       }
       localStorage.setItem("refreshToken", result.refresh_token);
       setAccessToken(result.access_token);
+      console.log(result);
       return AuthStatus.OK;
     } catch (err) {
+      console.log("register error");
       if (axios.isAxiosError(err)) {
         if (err.request.status === 400) {
           //Wrong credentials
@@ -185,7 +189,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         if (err.request.status === 409) {
           //Email already used
-          return AuthStatus.EMAIL_UNAVAILABLE;
+          return AuthStatus.LOGIN_UNAVAILABLE;
         }
       }
       return AuthStatus.ERROR;

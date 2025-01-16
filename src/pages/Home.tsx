@@ -1,5 +1,11 @@
-export const Home = () => (
-  <>
-    <h1>HOMEEE</h1>
-  </>
-);
+import { useState } from "react";
+
+export const Home = () => {
+  const [games, setGames] = useState<string>();
+
+  return (
+    <>
+      <h1>HOMEEE</h1>
+    </>
+  );
+};
