@@ -1,4 +1,3 @@
-// import { Button } from "@mui/material";
 import { useNavigate } from "react-router";
 import styled, { css } from "styled-components";
 import React from "react";
@@ -8,7 +7,7 @@ interface ReactNodeProps {
 }
 const HeadBar = (props: ReactNodeProps) => {
   const navigate = useNavigate();
-  const { userInfo } = useAuth();
+  const { userInfo, logout } = useAuth();
   return (
     <>
       <Background>
@@ -32,7 +31,9 @@ const HeadBar = (props: ReactNodeProps) => {
               <Button buttonType="primary" onClick={() => navigate("/profil")}>
                 Profil
               </Button>
-              <img src=""></img>
+              <div onClick={logout}>
+                <Img src="logout-svg.svg" />
+              </div>
             </>
           )}
         </RightContainer>
@@ -132,4 +133,13 @@ const buttonStyles = css<StyleProps>`
 
 const Button = styled.button<StyleProps>`
   ${buttonStyles}
+`;
+
+const Img = styled.img`
+  /* width: 10%; */
+  display: flex;
+  margin-right: 10vh;
+  justify-content: center;
+  align-items: center;
+  height: 5vh;
 `;

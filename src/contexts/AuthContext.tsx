@@ -1,8 +1,9 @@
-import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getMeRequest, loginRequest, registerRequest } from "../api/auth";
 import { updateLastLoginManagedUser } from "../api/users";
 import { UserCredential } from "../models/auth";
+import axiosI from "../axiosInterceptor";
+import axios from "axios";
 
 type UserInfo =
   | {
@@ -70,8 +71,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
 
-      const interceptor = axios.interceptors.request.use((config) => {
-        if (config?.headers) {
+      const interceptor = axiosI.interceptors.request.use((config) => {
+        if (config?.headers && !config.headers.Authorization) {
           config.headers.Authorization = `Bearer ${accessToken}`;
         }
         return config;
@@ -79,7 +80,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       updateUserInfo();
 
-      return () => axios.interceptors.request.eject(interceptor);
+      return () => axiosI.interceptors.request.eject(interceptor);
     }
     updateUserInfo();
   }, [accessToken, isReady]);
@@ -153,7 +154,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       return AuthStatus.OK;
     } catch (err) {
-      if (axios.isAxiosError(err) && err.request.status === 401) {
+      if (axios.isAxiosError(err) && err.request.status === 403) {
         //Wrong credentials
         return AuthStatus.WRONG_CREDENTIALS;
       }
@@ -165,6 +166,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUserInfo(null); //Forces router to wait until user data has been re-retrieved
     updateLastLoginManagedUser();
     localStorage.setItem("accessToken", "");
+    localStorage.setItem("refreshToken", "");
   };
   const register = async ({
     userName,
@@ -178,10 +180,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       localStorage.setItem("refreshToken", result.refresh_token);
       setAccessToken(result.access_token);
-      console.log(result);
       return AuthStatus.OK;
     } catch (err) {
-      console.log("register error");
       if (axios.isAxiosError(err)) {
         if (err.request.status === 400) {
           //Wrong credentials

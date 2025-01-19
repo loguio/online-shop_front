@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { AuthStatus, useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -13,13 +13,13 @@ export const Login = ({ signin }: { signin: boolean }) => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setErrorMessage("");
+  }, []);
   const submit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    console.log(userName, password);
-
     e.preventDefault();
     if (!signin) {
       const status = await login({ userName, password });
-      console.log(authStatusToString(status));
       if (status != AuthStatus.OK) {
         setErrorMessage(authStatusToString(status));
         return;

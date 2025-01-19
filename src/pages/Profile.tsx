@@ -10,7 +10,6 @@ export const Profil = () => {
 
   const retrieveUser = async () => {
     const result = userInfo;
-    console.log(result);
     if (result && result.state == LoginState.LOGGED_IN) {
       setUser(result);
     }
