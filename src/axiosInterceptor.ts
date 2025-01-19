@@ -29,7 +29,8 @@ axiosI.interceptors.response.use(
             },
           }
         );
-        const { access_token } = response.data;
+        const { access_token, refresh_token } = response.data;
+        localStorage.setItem("refreshToken", refresh_token);
 
         originalRequest.headers.Authorization = `Bearer ${access_token}`;
         return axiosI(originalRequest);
