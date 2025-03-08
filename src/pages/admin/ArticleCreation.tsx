@@ -5,6 +5,7 @@ import { createArticle } from "../../api/articles";
 import ErrorMessage from "../../components/errorMessage";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 interface IFormInput {
   name: string;
@@ -13,7 +14,7 @@ interface IFormInput {
 
 const ArticleCreation = () => {
   const [error, setError] = useState<string>();
-  const { register, handleSubmit } = useForm<IFormInput>();
+  const { register, handleSubmit, reset } = useForm<IFormInput>();
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -21,8 +22,13 @@ const ArticleCreation = () => {
     const article = await createArticle({ ...data, image: "" });
     if (article?.error) {
       setError(article.message);
+      return;
     }
+
+    reset();
+    toast.success("Article Ajouté");
   };
+
   return (
     <>
       <Button

@@ -7,11 +7,13 @@ import { Profil } from "../pages/Profile";
 import { LoginState, useAuth } from "../contexts/AuthContext";
 import ArticleCreation from "../pages/admin/ArticleCreation";
 import ArticleList from "../pages/admin/ItemList";
+import { Toaster } from "react-hot-toast";
 
 const AppRoot = () => {
   const { userInfo } = useAuth();
   return (
     <HeadBar>
+      <Toaster></Toaster>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="login" element={<Login signin={false} />} />

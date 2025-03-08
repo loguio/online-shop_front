@@ -10,7 +10,6 @@ export const createArticle = async (data: {
     await axiosI.post("/article", { ...data });
     return null;
   } catch (e) {
-    console.log(e);
     return { error: true, message: e.response.data.message as string };
   }
 };

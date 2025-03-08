@@ -11,6 +11,7 @@ const HeadBar = (props: ReactNodeProps) => {
 
   useEffect(() => {
     console.log(search);
+    //TODO faire une recherche ?
   }, [search]);
   const navigate = useNavigate();
   const { userInfo, logout } = useAuth();
@@ -25,7 +26,7 @@ const HeadBar = (props: ReactNodeProps) => {
         <Button onClick={() => navigate("/")} buttonType="primary">
           Home
         </Button>
-        Online SHOP
+        <div>Online SHOP</div>
         <TextField
           id="outlined-basic"
           label="Rechercher"
@@ -47,7 +48,10 @@ const HeadBar = (props: ReactNodeProps) => {
           )}
           {userInfo?.state == LoginState.LOGGED_IN && (
             <>
-              <Button buttonType="primary" onClick={() => navigate("/admin")}>
+              <Button
+                buttonType="primary"
+                onClick={() => navigate("/articles")}
+              >
                 Admin
               </Button>
               <Button buttonType="primary" onClick={() => navigate("/profil")}>
@@ -60,7 +64,7 @@ const HeadBar = (props: ReactNodeProps) => {
           )}
         </RightContainer>
       </Background>
-      <div style={{ minHeight: "100%" }}>{props.children}</div>
+      <div style={{ minHeight: "100%", padding: "1em" }}>{props.children}</div>
     </>
   );
 };
@@ -74,6 +78,7 @@ const Background = styled.div`
   align-items: center;
   padding-left: 50px;
   background-color: #f29898;
+  gap: 20px;
 `;
 
 const RightContainer = styled.div`
