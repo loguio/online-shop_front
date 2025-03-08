@@ -5,6 +5,8 @@ import { Login } from "../pages/auth/Login";
 import { Home } from "../pages/Home";
 import { Profil } from "../pages/Profile";
 import { LoginState, useAuth } from "../contexts/AuthContext";
+import ArticleCreation from "../pages/admin/ArticleCreation";
+import ArticleList from "../pages/admin/ItemList";
 
 const AppRoot = () => {
   const { userInfo } = useAuth();
@@ -16,7 +18,11 @@ const AppRoot = () => {
         <Route path="signin" element={<Login signin />} />
         <Route path="*" element={<NoMatch />} />
         {userInfo?.state == LoginState.LOGGED_IN && (
-          <Route path="profil" element={<Profil />} />
+          <>
+            <Route path="profil" element={<Profil />} />
+            <Route path="admin" element={<ArticleCreation />} />
+            <Route path="articles" element={<ArticleList />} />
+          </>
         )}
       </Routes>
     </HeadBar>

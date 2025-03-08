@@ -1,13 +1,24 @@
 import { useNavigate } from "react-router";
 import styled, { css } from "styled-components";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LoginState, useAuth } from "../../contexts/AuthContext";
+import { TextField } from "@mui/material";
 interface ReactNodeProps {
   children: React.ReactNode;
 }
 const HeadBar = (props: ReactNodeProps) => {
+  const [search, setSearch] = useState<string>();
+
+  useEffect(() => {
+    console.log(search);
+  }, [search]);
   const navigate = useNavigate();
   const { userInfo, logout } = useAuth();
+
+  const onLogout = () => {
+    logout();
+    navigate("/");
+  };
   return (
     <>
       <Background>
@@ -15,6 +26,14 @@ const HeadBar = (props: ReactNodeProps) => {
           Home
         </Button>
         Online SHOP
+        <TextField
+          id="outlined-basic"
+          label="Rechercher"
+          variant="outlined"
+          onChange={(val) => {
+            setSearch(val.target.value);
+          }}
+        />
         <RightContainer>
           {userInfo?.state == LoginState.LOGGED_OUT && (
             <>
@@ -28,10 +47,13 @@ const HeadBar = (props: ReactNodeProps) => {
           )}
           {userInfo?.state == LoginState.LOGGED_IN && (
             <>
+              <Button buttonType="primary" onClick={() => navigate("/admin")}>
+                Admin
+              </Button>
               <Button buttonType="primary" onClick={() => navigate("/profil")}>
                 Profil
               </Button>
-              <div onClick={logout}>
+              <div onClick={onLogout}>
                 <Img src="logout-svg.svg" />
               </div>
             </>

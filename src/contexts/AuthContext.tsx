@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getMeRequest, loginRequest, registerRequest } from "../api/auth";
 import { updateLastLoginManagedUser } from "../api/users";
-import { UserCredential } from "../models/auth";
+import { UserCredential } from "../types/auth";
 import axiosI from "../axiosInterceptor";
 import axios from "axios";
 
@@ -19,9 +19,12 @@ export type User = {
 };
 interface IAuthContext {
   userInfo: UserInfo | null;
-  login: ({ userName, password }: UserCredential) => Promise<AuthStatus>;
+  submitLogin: ({ userName, password }: UserCredential) => Promise<AuthStatus>;
   logout: () => Promise<void>;
-  register: ({ userName, password }: UserCredential) => Promise<AuthStatus>;
+  submitRegister: ({
+    userName,
+    password,
+  }: UserCredential) => Promise<AuthStatus>;
   //   changePassword: (
   //     password: NewPasswordWithConfirmation
   //   ) => Promise<AuthStatus>;
@@ -45,9 +48,9 @@ export enum LoginState {
 
 const AuthContext = createContext<IAuthContext>({
   userInfo: null,
-  login: async () => AuthStatus.ERROR,
+  submitLogin: async () => AuthStatus.ERROR,
   logout: async () => {},
-  register: async () => AuthStatus.ERROR,
+  submitRegister: async () => AuthStatus.ERROR,
   //   changePassword: async () => AuthStatus.ERROR,
   // resetPassword: async () => AuthStatus.ERROR,
   //   hasAccess: () => true,
@@ -136,7 +139,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUserInfo({ state: LoginState.LOGGED_OUT });
     }
   };
-  const login = async ({
+  const submitLogin = async ({
     userName,
     password,
   }: UserCredential): Promise<AuthStatus> => {
@@ -168,7 +171,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("accessToken", "");
     localStorage.setItem("refreshToken", "");
   };
-  const register = async ({
+  const submitRegister = async ({
     userName,
     password,
   }: UserCredential): Promise<AuthStatus> => {
@@ -208,9 +211,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         userInfo,
-        login,
+        submitLogin,
         logout,
-        register,
+        submitRegister,
         // changePassword,
         // resetPassword,
         // acceptConditions,

@@ -3,30 +3,33 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { AuthStatus, useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { ErrorMessage } from "../../components/errorMessage";
 import { authStatusToString } from "../../utils/utils";
-
+import { SubmitHandler, useForm } from "react-hook-form";
+import ErrorMessage from "../../components/errorMessage";
+interface IFormInput {
+  userName: string;
+  password: string;
+}
 export const Login = ({ signin }: { signin: boolean }) => {
-  const [userName, setUserName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>();
-  const { login, register } = useAuth();
+  const { submitLogin, submitRegister } = useAuth();
   const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = (data) => submit(data);
 
   useEffect(() => {
     setErrorMessage("");
   }, []);
-  const submit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
+  const submit = async (data: IFormInput) => {
     if (!signin) {
-      const status = await login({ userName, password });
+      const status = await submitLogin({ ...data });
       if (status != AuthStatus.OK) {
         setErrorMessage(authStatusToString(status));
         return;
       }
       navigate("/profil");
     } else {
-      const status = await register({ userName, password });
+      const status = await submitRegister({ ...data });
       if (status != AuthStatus.OK) {
         setErrorMessage(authStatusToString(status));
         return;
@@ -39,25 +42,29 @@ export const Login = ({ signin }: { signin: boolean }) => {
       <Container>
         <ContainerLogin>
           <Title>Account </Title>
-          <InputText
-            type="text"
-            placeholder="login"
-            onChange={(val) => setUserName(val.target.value)}
-          ></InputText>
-          <InputText
-            type="password"
-            placeholder="password"
-            onChange={(val) => setPassword(val.target.value)}
-          ></InputText>
-          <Button
-            type="submit"
-            onClick={(e) => submit(e)}
-            variant="contained"
-            style={{ marginTop: "6vh" }}
-          >
-            {signin ? "Signin" : "Login"}
-          </Button>
-          {errorMessage && <ErrorMessage message={errorMessage}></ErrorMessage>}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <InputText
+              autoFocus
+              type="text"
+              placeholder="login"
+              {...register("password")}
+            ></InputText>
+            <InputText
+              type="password"
+              placeholder="password"
+              {...register("password")}
+            ></InputText>
+            <Button
+              type="submit"
+              variant="contained"
+              style={{ marginTop: "6vh" }}
+            >
+              {signin ? "Signin" : "Login"}
+            </Button>
+            {errorMessage && (
+              <ErrorMessage message={errorMessage}></ErrorMessage>
+            )}
+          </form>
         </ContainerLogin>
       </Container>
     </Body>
