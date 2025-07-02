@@ -1,4 +1,4 @@
 export type UserCredential = {
-  userName: string;
+  email: string;
   password: string;
 };

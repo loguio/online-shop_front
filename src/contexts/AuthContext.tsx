@@ -4,6 +4,7 @@ import { updateLastLoginManagedUser } from "../api/users";
 import { UserCredential } from "../types/auth";
 import axiosI from "../axiosInterceptor";
 import axios from "axios";
+import { RoleEnum } from "../types/role";
 
 type UserInfo =
   | {
@@ -13,18 +14,17 @@ type UserInfo =
 
 export type User = {
   id: string;
-  userName: string;
+  email: string;
   lastLogin?: Date;
   refreshToken: string;
+  role: RoleEnum;
 };
 interface IAuthContext {
   userInfo: UserInfo | null;
-  submitLogin: ({ userName, password }: UserCredential) => Promise<AuthStatus>;
+  submitLogin: ({ email, password }: UserCredential) => Promise<AuthStatus>;
   logout: () => Promise<void>;
-  submitRegister: ({
-    userName,
-    password,
-  }: UserCredential) => Promise<AuthStatus>;
+  submitRegister: ({ email, password }: UserCredential) => Promise<AuthStatus>;
+  isAuthReady: boolean;
   //   changePassword: (
   //     password: NewPasswordWithConfirmation
   //   ) => Promise<AuthStatus>;
@@ -55,12 +55,15 @@ const AuthContext = createContext<IAuthContext>({
   // resetPassword: async () => AuthStatus.ERROR,
   //   hasAccess: () => true,
   retrieveUserInfos: async () => {},
+  isAuthReady: false,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [isAuthReady, setIsAuthReady] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
 
@@ -104,8 +107,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           state: LoginState.LOGGED_IN,
           ...(me as {
             id: string;
-            userName: string;
+            email: string;
             refreshToken: string;
+            role: RoleEnum;
           }),
         });
       } else {
@@ -122,6 +126,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (!accessToken) {
       setUserInfo({ state: LoginState.LOGGED_OUT });
+      setIsAuthReady(true); // ✅
     }
     try {
       const me = await getMeRequest();
@@ -135,16 +140,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         setUserInfo({ state: LoginState.LOGGED_OUT });
       }
-    } catch (e) {
+    } catch {
       setUserInfo({ state: LoginState.LOGGED_OUT });
+    } finally {
+      setIsAuthReady(true); // ✅ toujours à la fin
     }
   };
   const submitLogin = async ({
-    userName,
+    email,
     password,
   }: UserCredential): Promise<AuthStatus> => {
     try {
-      const result = await loginRequest(userName, password);
+      const result = await loginRequest(email, password);
 
       if (!result) {
         //Unknown error
@@ -172,11 +179,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("refreshToken", "");
   };
   const submitRegister = async ({
-    userName,
+    email,
     password,
   }: UserCredential): Promise<AuthStatus> => {
     try {
-      const result = await registerRequest(userName, password);
+      const result = await registerRequest(email, password);
 
       if (!result) {
         return AuthStatus.ERROR;
@@ -218,6 +225,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // resetPassword,
         // acceptConditions,
         // hasAccess,
+        isAuthReady,
         retrieveUserInfos,
       }}
     >

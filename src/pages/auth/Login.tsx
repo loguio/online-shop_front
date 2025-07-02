@@ -7,7 +7,7 @@ import { authStatusToString } from "../../utils/utils";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ErrorMessage from "../../components/errorMessage";
 interface IFormInput {
-  userName: string;
+  email: string;
   password: string;
 }
 export const Login = ({ signin }: { signin: boolean }) => {
@@ -46,8 +46,8 @@ export const Login = ({ signin }: { signin: boolean }) => {
             <InputText
               autoFocus
               type="text"
-              placeholder="login"
-              {...register("password")}
+              placeholder="email"
+              {...register("email")}
             ></InputText>
             <InputText
               type="password"
