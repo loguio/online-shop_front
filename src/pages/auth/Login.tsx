@@ -42,7 +42,7 @@ export const Login = ({ signin }: { signin: boolean }) => {
       <Container>
         <ContainerLogin>
           <Title>Account </Title>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <InputText
               autoFocus
               type="text"
@@ -57,14 +57,14 @@ export const Login = ({ signin }: { signin: boolean }) => {
             <Button
               type="submit"
               variant="contained"
-              style={{ marginTop: "6vh" }}
+              style={{ marginTop: "6vh", display: "flex", width: "50%" }}
             >
-              {signin ? "Signin" : "Login"}
+              {signin ? "Register" : "Login"}
             </Button>
             {errorMessage && (
               <ErrorMessage message={errorMessage}></ErrorMessage>
             )}
-          </form>
+          </Form>
         </ContainerLogin>
       </Container>
     </Body>
@@ -95,6 +95,7 @@ const Container = styled.div`
 const ContainerLogin = styled.div`
   padding: 11vh;
   justify-content: center;
+  align-items: center;
   display: flex;
   flex-direction: column;
 `;
@@ -109,4 +110,10 @@ const InputText = styled.input`
     border: 1px solid #3498db;
   }
   margin-top: 3vh;
+`;
+
+const Form = styled.form`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 `;

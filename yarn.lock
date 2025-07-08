@@ -2398,7 +2398,8 @@ object.values@^1.1.6, object.values@^1.2.1:
     "@stripe/stripe-js" "^7.4.0"
     axios "^1.10.0"
     axios-retry "^4.5.0"
-    online-shop_front "file:../../../../AppData/Local/Yarn/Cache/v6/npm-online-shop-front-0.0.0-5db4507c-f6cd-4af3-9882-52ce4f098e1a-1751448197369/node_modules/online-shop_front"
+    bootstrap "^5.3.7"
+    online-shop_front "file:../../../../AppData/Local/Yarn/Cache/v6/npm-online-shop-front-0.0.0-1d8ded24-15cc-4d0d-b9b9-151717af007e-1751836174693/node_modules/online-shop_front"
     react "^18.3.1"
     react-dom "^18.3.1"
     react-hook-form "^7.59.0"
@@ -3081,10 +3082,10 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-vite@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-7.0.0.tgz#5675bb4c956dd9da932583628e7758ab09fe761f"
-  integrity sha512-ixXJB1YRgDIw2OszKQS9WxGHKwLdCsbQNkpJN171udl6szi/rIySHL6/Os3s2+oE4P/FLD4dxg4mD7Wust+u5g==
+vite@^7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-7.0.2.tgz#66ddf890c4357f4fb6803a787dc210538591b917"
+  integrity sha512-hxdyZDY1CM6SNpKI4w4lcUc3Mtkd9ej4ECWVHSMrOdSinVc2zYOAppHeGc/hzmRo3pxM5blMzkuWHOJA/3NiFw==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.4.6"

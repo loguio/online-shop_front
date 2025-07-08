@@ -7,7 +7,7 @@ export const createArticle = async (data: {
   image: string;
 }) => {
   try {
-    await axiosI.post("/article", { ...data });
+    await axiosI.post("/product", { ...data });
     return null;
   } catch (e) {
     return { error: true, message: e.response.data.message as string };
@@ -15,10 +15,10 @@ export const createArticle = async (data: {
 };
 
 export const getArticlesApi = async (): Promise<Product[]> => {
-  const res = await axiosI.get(`/article`);
+  const res = await axiosI.get(`/product`);
   return res.data as Product[];
 };
 export const getArticleApi = async (id: string): Promise<Product> => {
-  const res = await axiosI.get(`/article/${id}`);
+  const res = await axiosI.get(`/product/${id}`);
   return res.data as Product;
 };
